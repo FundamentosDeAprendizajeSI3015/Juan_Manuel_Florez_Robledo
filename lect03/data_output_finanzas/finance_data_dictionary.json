@@ -1,0 +1,45 @@
+{
+  "source_file": "fintech_top_sintetico_2025.csv",
+  "date_col": "Month",
+  "id_cols": [
+    "Company"
+  ],
+  "categorical_cols": [
+    "Country",
+    "Region",
+    "Segment",
+    "IsPublic"
+  ],
+  "numeric_cols": [
+    "ARPU_USD",
+    "CAC_Total_USD_M",
+    "CAC_USD",
+    "Churn_pct",
+    "Close_USD",
+    "Close_USD_logret",
+    "Close_USD_ret",
+    "Marketing_Spend_USD_M",
+    "NewUsers_K",
+    "Private_Valuation_USD_B",
+    "Revenue_USD_M",
+    "TPV_USD_B",
+    "TakeRate_pct",
+    "Users_M"
+  ],
+  "price_cols": [
+    "Close_USD"
+  ],
+  "target_col": null,
+  "time_split": true,
+  "split_date": "2025-09-01",
+  "test_size": 0.2,
+  "winsorize": null,
+  "X_train_shape": [
+    96,
+    36
+  ],
+  "X_test_shape": [
+    48,
+    36
+  ]
+}
