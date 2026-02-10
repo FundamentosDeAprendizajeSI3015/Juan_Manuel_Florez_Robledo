@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>IA-Aburrá: Refrigeración y Monitoreo de Motores</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<style>
+:root {
+  --electric: #00f2fe;
+  --power: #4facfe;
+  --warning: #f093fb;
+  --dark: #0a0e1a;
+  --glass: rgba(255, 255, 255, 0.03);
+}
+body {
+  margin: 0;
+  background: var(--dark);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.energy-field {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 50%, #101835, #0a0e1a);
+}
+.pulse-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--electric);
+  opacity: 0.1;
+  pointer-events: none;
+}
+.main-container {
+  width: 90%;
+  max-width: 1200px;
+  height: 700px;
+  background: var(--glass);
+  backdrop-filter: blur(25px);
+  border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+.slide {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  height: 100%;
+  align-items: center;
+}
+.slide.active { display: grid; }
+.content h2 {
+  color: var(--warning);
+  letter-spacing: 4px;
+  font-size: 0.8rem;
+}
+.content h1 {
+  font-size: 2.6rem;
+  color: var(--electric);
+}
+.content p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
+.bullets {
+  list-style: none;
+  padding: 0;
+}
+.bullets li {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid var(--electric);
+  border-radius: 8px;
+}
+.bullets b {
+  color: var(--electric);
+}
+.img-placeholder {
+  height: 500px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.img-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.img-label {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(0,0,0,0.6);
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+.nav {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  display: flex;
+  gap: 15px;
+}
+button {
+  background: transparent;
+  border: 1px solid var(--electric);
+  color: var(--electric);
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+button:hover {
+  background: var(--electric);
+  color: var(--dark);
+}
+</style>
+</head>
+
+<body>
+
+<div class="energy-field" id="bg"></div>
+
+<div class="main-container">
+
+<!-- SLIDE 1 -->
+<div class="slide active" id="s1">
+<div class="content">
+<h2>Contexto del Proyecto</h2>
+<h1>Refrigeración y Motores Industriales</h1>
+<p>
+Este proyecto busca predecir fallas en sistemas de refrigeración y motores eléctricos
+utilizados en industrias del Valle de Aburrá.
+</p>
+<ul class="bullets">
+<li><b>Aplicación:</b> Cámaras de frío, centros de datos, líneas de producción.</li>
+<li><b>Riesgo:</b> Sobrecalentamiento y daño del motor.</li>
+<li><b>Objetivo:</b> Detectar anomalías antes de que ocurra la falla.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+
+<div class="img-label">Sistemas de Refrigeración Industrial</div>
+</div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide" id="s2">
+<div class="content">
+<h2>Fase 1</h2>
+<h1>Obtención de Datos</h1>
+<p>El modelo se alimenta de datos continuos capturados directamente del sistema.</p>
+<ul class="bullets">
+<li><b>Sensores:</b> Temperatura del refrigerante, vibración del motor, voltaje y corriente.</li>
+<li><b>Históricos:</b> Registros de fallas, mantenimientos y paradas.</li>
+<li><b>Contexto:</b> Tipo de carga, horario y condiciones ambientales.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+<img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80">
+<div class="img-label">Sensores y Motores</div>
+</div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide" id="s3">
+<div class="content">
+<h2>Fase 2</h2>
+<h1>Limpieza y Validación</h1>
+<p>Garantizamos que los datos representen el comportamiento real del sistema.</p>
+<ul class="bullets">
+<li><b>Imputación:</b> Uso de mediana para evitar sesgo por picos.</li>
+<li><b>GIGO:</b> Eliminación de lecturas erróneas del sensor.</li>
+<li><b>Validación:</b> Rangos físicos de operación seguros.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80">
+<div class="img-label">Data Cleaning</div>
+</div>
+</div>
+
+<!-- SLIDE 4 -->
+<div class="slide" id="s4">
+<div class="content">
+<h2>Fase 3</h2>
+<h1>Análisis de Anomalías</h1>
+<p>Analizamos cómo se comporta un motor sano frente a uno defectuoso.</p>
+<ul class="bullets">
+<li><b>Patrones:</b> Temperatura estable vs incrementos anómalos.</li>
+<li><b>Voltaje:</b> Caídas o picos fuera de lo normal.</li>
+<li><b>Vibración:</b> Indicador temprano de desgaste mecánico.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+<img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80">
+<div class="img-label">Análisis Exploratorio</div>
+</div>
+</div>
+
+<!-- SLIDE 5 -->
+<div class="slide" id="s5">
+<div class="content">
+<h2>Fase 4</h2>
+<h1>Ingeniería de Características</h1>
+<p>Transformamos señales crudas en información útil para el modelo.</p>
+<ul class="bullets">
+<li><b>Variables:</b> Promedios móviles y desviaciones.</li>
+<li><b>Etiquetas:</b> Normal vs anomalía.</li>
+<li><b>Tiempo:</b> Ventanas temporales para predicción.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+<img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80">
+<div class="img-label">Feature Engineering</div>
+</div>
+</div>
+
+<!-- SLIDE 6 -->
+<div class="slide" id="s6">
+<div class="content">
+<h2>Fase 5</h2>
+<h1>Modelo y Fine-Tuning</h1>
+<p>Entrenamos y ajustamos el modelo para el entorno real.</p>
+<ul class="bullets">
+<li><b>Regresión:</b> Predecir temperatura y consumo.</li>
+<li><b>Clasificación:</b> Detectar estado normal o falla.</li>
+<li><b>Fine-Tuning:</b> Ajuste con datos locales.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80">
+<div class="img-label">Modelo Predictivo</div>
+</div>
+</div>
+
+<!-- SLIDE 7 -->
+<div class="slide" id="s7">
+<div class="content">
+<h2>Cierre</h2>
+<h1>Predicción de Fallas</h1>
+<p>El sistema permite actuar antes de que ocurra el daño.</p>
+<ul class="bullets">
+<li><b>Beneficio:</b> Menos paradas inesperadas.</li>
+<li><b>Ahorro:</b> Reducción de costos de mantenimiento.</li>
+<li><b>Impacto:</b> Mayor confiabilidad operativa.</li>
+</ul>
+</div>
+<div class="img-placeholder">
+<img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80">
+<div class="img-label">Conclusión</div>
+</div>
+</div>
+
+<div class="nav">
+<button id="prevBtn">Atrás</button>
+<button id="nextBtn">Siguiente</button>
+</div>
+
+</div>
+
+<script>
+function createPulse() {
+  const p = document.createElement('div');
+  p.className = 'pulse-circle';
+  const size = Math.random() * 150 + 50;
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.top = Math.random() * 100 + '%';
+  document.getElementById('bg').appendChild(p);
+  anime({
+    targets: p,
+    scale: [0, 5],
+    opacity: [0.15, 0],
+    duration: 4000,
+    easing: 'easeOutSine',
+    complete: () => p.remove()
+  });
+}
+setInterval(createPulse, 700);
+
+let current = 1;
+const total = 7;
+
+function updateSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + n).classList.add('active');
+}
+
+document.getElementById('nextBtn').onclick = () => {
+  current = current < total ? current + 1 : 1;
+  updateSlide(current);
+};
+document.getElementById('prevBtn').onclick = () => {
+  current = current > 1 ? current - 1 : total;
+  updateSlide(current);
+};
+</script>
+
+</body>
+</html>
