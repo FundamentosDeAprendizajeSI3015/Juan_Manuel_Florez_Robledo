@@ -1,0 +1,29 @@
+# --- Datos ---
+# No subir los datasets pesados para evitar saturar el repositorio
+# Según el ciclo de vida (Semana 2), los datos crudos se mantienen locales [cite: 561]
+data/datos/*.csv
+data/datos/*.json
+
+# --- Python ---
+# Archivos temporales y de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# --- Entornos Virtuales ---
+# No subir las librerías instaladas (venv, conda)
+env/
+venv/
+.env
+.venv
+bin/
+lib/
+share/
+
+# --- Otros ---
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
