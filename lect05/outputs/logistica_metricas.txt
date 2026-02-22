@@ -1,0 +1,4 @@
+--- RESULTADOS REGRESION LOGISTICA ---
+Mejores Parámetros: {'classifier__C': np.float64(69.58780103230364), 'classifier__solver': 'lbfgs'}
+Accuracy de prueba: 0.82
+F1-Score de prueba: 0.76

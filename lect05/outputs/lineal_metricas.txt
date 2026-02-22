@@ -1,0 +1,8 @@
+--- RESULTADOS REGRESION LINEAL ---
+Mejores Parámetros Ridge: {'poly__degree': 2, 'regressor__alpha': np.float64(2.0540519425388455)}
+Ridge MAE: 9.48
+Ridge R2: 0.26
+
+Mejores Parámetros Lasso: {'poly__degree': 2, 'regressor__alpha': np.float64(0.04233032996527596)}
+Lasso MAE: 9.47
+Lasso R2: 0.26
