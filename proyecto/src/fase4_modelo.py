@@ -96,7 +96,7 @@ def construir_conjuntos(X, y, random_state=42):
     # Primer split: 60% train, 40% temporal
     X_train, X_temp, y_train, y_temp = train_test_split(
         X, y,
-        test_size=0.40,
+        test_size=0.70,
         random_state=random_state,
         stratify=y
     )
