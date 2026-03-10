@@ -1,0 +1,44 @@
+# ── Entorno virtual ──
+.venv/
+venv/
+env/
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Jupyter ──
+.ipynb_checkpoints/
+*.ipynb_metadata/
+
+# ── Datos y modelos (pesados, no van a Git) ──
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.parquet
+models/*.pkl
+models/*.joblib
+models/*.onnx
+
+# ── Outputs generados ──
+outputs/*.png
+outputs/*.html
+outputs/*.pdf
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Variables de entorno ──
+.env
+.env.local

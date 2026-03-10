@@ -1,0 +1,17 @@
+anio,unidad,y_true,probabilidad,prediccion,acierto
+2024,Ciencias Económicas,1,0.7778,1,✅
+2025,Ciencias Económicas,0,0.1992,0,✅
+2024,Derecho,1,0.6575,1,✅
+2025,Derecho,1,0.5705,1,✅
+2024,Educación,0,0.5309,1,❌
+2025,Educación,1,0.6503,1,✅
+2024,Facultad de Ingeniería,1,0.6214,1,✅
+2025,Facultad de Ingeniería,0,0.0789,0,✅
+2024,Institutos,1,0.5002,1,✅
+2025,Institutos,1,0.6876,1,✅
+2024,Medicina,0,0.3521,1,❌
+2025,Medicina,1,0.6883,1,✅
+2024,Nivel Central,1,0.6588,1,✅
+2025,Nivel Central,1,0.3474,1,✅
+2024,Sedes y Seccionales,1,0.3476,1,✅
+2025,Sedes y Seccionales,1,0.5955,1,✅
