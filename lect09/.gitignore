@@ -1,0 +1,25 @@
+# Entorno Virtual
+env/
+venv/
+ENV/
+
+# Python (archivos compilados)
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook (archivos temporales y checkpoints)
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Distribución / Empaquetado
+dist/
+build/
+*.egg-info/
+
+# Variables de entorno (seguridad)
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

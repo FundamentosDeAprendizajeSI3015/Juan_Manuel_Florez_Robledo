@@ -95,7 +95,7 @@ El modelo utiliza una combinación de indicadores financieros base y variables d
 
 ---
 
-## 👤 Autor
+##  Autor
 
 **Juan Manuel Flórez** — [@JuanmaFl](https://github.com/JuanmaFl)
 
