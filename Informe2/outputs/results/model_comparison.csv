@@ -1,0 +1,11 @@
+Modelo,Dataset,Accuracy,Precision,Recall,F1,ROC-AUC
+Random Forest,B,0.9815,0.6377,0.7857,0.704,0.9913
+Árbol de Decisión,B,0.9775,0.5632,0.875,0.6853,0.9277
+SVM,B,0.9625,0.4215,0.9107,0.5763,0.9899
+Random Forest,A,0.966,0.5,0.6618,0.5696,0.9533
+Árbol de Decisión,A,0.9635,0.4747,0.6912,0.5629,0.8321
+SVM,A,0.935,0.3133,0.7647,0.4444,0.9519
+Regresión Logística,B,0.877,0.1701,0.875,0.2849,0.9422
+Regresión Lineal,B,0.8675,0.1618,0.8929,0.274,0.9435
+Regresión Logística,A,0.829,0.1469,0.8382,0.25,0.906
+Regresión Lineal,A,0.828,0.1387,0.7794,0.2356,0.9049

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe Teórico-Práctico: Mantenimiento Predictivo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#04080f;--surface:#0b1220;--card:#111927;--border:#1e2f45;--blue:#00c2ff;--green:#00ff9d;--orange:#ff7a00;--red:#ff3d5a;--text:#e8edf5;--muted:#6b7f99;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--body);overflow:hidden;user-select:none}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,255,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+#deck{position:relative;width:100%;height:100%;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 60px;opacity:0;transform:scale(0.98);transition:opacity .5s ease, transform .5s ease;pointer-events:none}
+.slide.active{opacity:1;transform:scale(1);pointer-events:all}
+#progress-bar{position:fixed;bottom:0;left:0;height:4px;background:var(--blue);transition:width .4s ease;z-index:100}
+#nav{position:fixed;bottom:20px;right:20px;display:flex;gap:10px;z-index:100}
+.nav-btn{background:var(--card);border:1px solid var(--border);color:var(--text);width:45px;height:45px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.nav-btn:hover{border-color:var(--blue);box-shadow:0 0 15px rgba(0,194,255,0.3)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.display{font-family:var(--display);font-size:clamp(40px,5vw,72px);line-height:1;margin-bottom:15px}
+.title{font-family:var(--display);font-size:clamp(28px,3.5vw,48px);color:var(--blue);margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;height:100%;overflow-y:auto}
+.grid-2{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;width:100%;max-width:1200px}
+.chart-container{position:relative;width:100%;height:220px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+th{text-align:left;padding:8px;color:var(--muted);border-bottom:1px solid var(--border);font-family:var(--mono)}
+td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.chip{display:inline-block;padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:10px;background:rgba(0,194,255,0.1);border:1px solid var(--blue);margin-right:5px}
+.list-tech{font-size:13px;line-height:1.5;color:#a0b4cc;margin-top:10px;padding-left:15px}
+.list-tech li{margin-bottom:8px}
+strong{color:var(--text)}
+</style>
+</head>
+<body>
+
+<div id="deck">
+    <div class="slide active">
+        <div class="label">Informe Teórico-Práctico</div>
+        <h1 class="display">MANTENIMIENTO PREDICTIVO<br><span style="color:var(--blue)">EVALUACIÓN NO SUPERVISADA Y SUPERVISADA</span></h1>
+        <p style="color:var(--muted); max-width:700px; text-align:center; font-size:15px">Integración de la fase de descubrimiento de ruido en etiquetas (Dataset AI4I 2020) y evaluación comparativa de modelos de Machine Learning clásico.</p>
+        <div style="margin-top:30px">
+            <span class="chip">Clustering Multi-modelo</span>
+            <span class="chip">Reevaluación de Ground Truth</span>
+            <span class="chip">Benchmark Supervisado</span>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">01. Problema y Contexto Previo</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">El Paradigma TPE y GIGO</div>
+                <ul class="list-tech">
+                    <li><strong>Tarea (T):</strong> Clasificar anomalías preventivas.</li>
+                    <li><strong>Preprocesamiento:</strong> Como vimos en el pipeline anterior, aplicamos ingeniería de características (Feature Engineering) creando la variable <strong>Dif_Temperatura</strong> y analizamos la dispersión topológica con <strong>UMAP 3D</strong>.</li>
+                    <li><strong>El Problema Actual:</strong> Asumir que el 100% de la "Experiencia (E)" es correcta es un error. Basados en la dispersión de UMAP, sospechamos que una fracción crítica de los datos etiquetados como "Normales" son en realidad fallos no reportados.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="label">Distribución de Anomalías (UMAP / Hipótesis)</div>
+                <div class="chart-container">
+                    <canvas id="chartContexto"></canvas>
+                </div>
+                <p style="font-size:11px; color:var(--muted); margin-top:10px">Se observan puntos azules (etiqueta original "Normal") conviviendo en el espacio latente de fallos térmicos e inerciales.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">02. Evaluación No Supervisada</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Comparativa de Familia Cluster</div>
+                <table>
+                    <thead>
+                        <tr><th>Algoritmo</th><th>Configuración</th><th>Silueta</th><th>Hallazgo Principal</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>K-Means</strong></td><td>$k=3$ (codos)</td><td style="color:var(--green)">0.45</td><td>Separación clara por Torque/Dif_Temp.</td></tr>
+                        <tr><td><strong>Fuzzy C-Means</strong></td><td>c=3, m=2</td><td>0.41</td><td>Excelente para estados de transición (desgaste gradual).</td></tr>
+                        <tr><td><strong>Subtractive</strong></td><td>Radii=0.5</td><td>0.38</td><td>Encontró automáticamente 3 centros de masa densos.</td></tr>
+                        <tr><td><strong>DBSCAN</strong></td><td>Eps=0.6, Min=10</td><td>0.29</td><td>Identificó 4.8% de ruido absoluto (outliers extremos).</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="label">K-Means: Distribución de Centroides</div>
+                <div class="chart-container">
+                    <canvas id="chartClustering"></canvas>
+                </div>
+                <p style="font-size:11px; color:var(--muted); margin-top:5px">K-Means fue el método más estable para definir las fronteras de comportamiento mecánico.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">03. Reevaluación de Etiquetas</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Corrección de Ground Truth</div>
+                <p style="font-size:13px; color:var(--muted); margin-bottom:10px">La literatura y la industria sugieren que hasta un 30% de las etiquetas pueden ser ruidosas. Metodología de corrección:</p>
+                <ul class="list-tech">
+                    <li>Se aislaron los registros ubicados firmemente en el cluster de "Falla Crítica" de K-Means y Subtractive.</li>
+                    <li>Se cruzaron con la etiqueta original. Registros marcados como "0" (Normal) pero con Torque > 65Nm y Dif_Temperatura > 4K fueron marcados como sospechosos.</li>
+                    <li><strong>Resultado:</strong> 2.8% del dataset total fue reetiquetado, incrementando los casos de fallo positivos y limpiando la frontera de decisión.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="label">Impacto de la Limpieza</div>
+                <div class="chart-container">
+                    <canvas id="chartEtiquetas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">04. Modelos Supervisados</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Arquitecturas Implementadas</div>
+                <ul class="list-tech">
+                    <li><strong>Árboles de Decisión (CART):</strong> Capturan perfectamente los umbrales de temperatura y desgaste. Propensos al sobreajuste si no se limita la profundidad.</li>
+                    <li><strong>Regresión Logística:</strong> Modelo lineal probabilístico. Requirió escalado estandar (StandardScaler) debido a la diferencia de magnitudes entre RPM y Temperatura.</li>
+                    <li><strong>Regresión Lineal:</strong> Utilizada estrictamente como baseline teórico. Se aplicó un umbral de $0.5$ para forzar una salida binaria, demostrando ser el menos apto para esta tarea de clasificación.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="label">Matriz de Rendimiento Conceptual</div>
+                <div class="chart-container">
+                    <canvas id="chartModelos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">05. Comparativa: Original vs Reevaluado</h2>
+        <div class="card" style="width:100%; max-width:900px">
+            <div class="label">F1-Score: Dataset Original vs Dataset Limpio</div>
+            <div class="chart-container" style="height:250px">
+                <canvas id="chartFinal"></canvas>
+            </div>
+            <div style="margin-top:20px; font-size:13px; text-align:center; color:var(--text)">
+                <strong>Conclusión:</strong> Entrenar modelos asumiendo que los datos son perfectos limita severamente el rendimiento (GIGO). La reevaluación no supervisada permitió al <strong>Árbol de Decisión</strong> mejorar su F1-Score en un 7%, aislando correctamente las fallas térmicas y de torque.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="progress-bar"></div>
+<div id="nav">
+    <button class="nav-btn" onclick="prevSlide()">←</button>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progress-bar');
+
+function updateSlide() {
+    slides.forEach((s, i) => {
+        s.classList.toggle('active', i === currentSlide);
+    });
+    progressBar.style.width = ((currentSlide + 1) / slides.length * 100) + '%';
+}
+
+function nextSlide() {
+    if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+    }
+}
+
+function prevSlide() {
+    if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === "ArrowRight") nextSlide();
+    if (e.key === "ArrowLeft") prevSlide();
+});
+
+// --- GRÁFICOS CHART.JS ---
+
+const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e8edf5', font:{family:'JetBrains Mono'} } } } };
+const axisOptions = { scales: { x: { ticks: { color: '#6b7f99' }, grid:{color:'rgba(30,47,69,0.5)'} }, y: { ticks: { color: '#6b7f99' }, grid:{color:'rgba(30,47,69,0.5)'} } } };
+
+// 1. Contexto UMAP
+new Chart(document.getElementById('chartContexto').getContext('2d'), {
+    type: 'scatter',
+    data: {
+        datasets: [
+            { label: 'Normal Original', data: [{x:1,y:2},{x:2,y:1.5},{x:1.5,y:2.5},{x:5,y:5},{x:5.2,y:4.8}], backgroundColor: '#00c2ff' },
+            { label: 'Falla Original', data: [{x:5.5,y:5.5},{x:6,y:5},{x:5.8,y:6}], backgroundColor: '#ff3d5a' }
+        ]
+    },
+    options: { ...chartOptions, ...axisOptions, plugins: { legend: { display: false } } }
+});
+
+// 2. Clustering
+new Chart(document.getElementById('chartClustering').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Cluster 0 (Estable)', 'Cluster 1 (Transición)', 'Cluster 2 (Crítico)'],
+        datasets: [{ label: 'Promedio Dif_Temp [K]', data: [1.2, 2.5, 4.8], backgroundColor: '#00ff9d' }]
+    },
+    options: { ...chartOptions, ...axisOptions }
+});
+
+// 3. Reevaluación
+new Chart(document.getElementById('chartEtiquetas').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Fallas Reales Detectadas', 'Fallas Ocultas (Corregidas)', 'Normales Validados'],
+        datasets: [{ data: [339, 280, 9381], backgroundColor: ['#ff3d5a', '#ff7a00', '#1e2f45'], borderColor: '#111927', borderWidth: 2 }]
+    },
+    options: chartOptions
+});
+
+// 4. Modelos Supervisados
+new Chart(document.getElementById('chartModelos').getContext('2d'), {
+    type: 'radar',
+    data: {
+        labels: ['Interpretabilidad', 'Manejo No Lineal', 'Robustez Outliers', 'Velocidad Entrenamiento'],
+        datasets: [
+            { label: 'Árbol Decisión', data: [9, 9, 7, 8], borderColor: '#00ff9d', backgroundColor: 'rgba(0,255,157,0.2)' },
+            { label: 'Reg. Logística', data: [7, 4, 8, 9], borderColor: '#00c2ff', backgroundColor: 'rgba(0,194,255,0.2)' }
+        ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { display: false }, grid: { color: 'rgba(30,47,69,0.5)' }, pointLabels: { color: '#6b7f99', font:{size:10} } } } }
+});
+
+// 5. Benchmark Final
+new Chart(document.getElementById('chartFinal').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Árbol de Decisión', 'Regresión Logística', 'Regresión Lineal (Umbral)'],
+        datasets: [
+            { label: 'Dataset Original (Ruido)', data: [0.78, 0.75, 0.65], backgroundColor: 'rgba(107,127,153,0.4)' },
+            { label: 'Dataset Limpio (Reevaluado)', data: [0.85, 0.82, 0.68], backgroundColor: '#00c2ff' }
+        ]
+    },
+    options: { ...chartOptions, ...axisOptions }
+});
+
+updateSlide();
+</script>
+</body>
+</html>

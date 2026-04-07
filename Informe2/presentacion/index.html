@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mantenimiento Predictivo — Informe 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04080f;--surface:#0b1220;--card:#111927;--border:#1e2f45;--blue:#00c2ff;--green:#00ff9d;--orange:#ff7a00;--red:#ff3d5a;--text:#e8edf5;--muted:#6b7f99;--display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--body);overflow:hidden;user-select:none}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,255,.04) 1px,transparent 1px);background-size:48px 48px;z-index:0}
+#deck{position:relative;width:100%;height:100%;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 60px;opacity:0;transform:scale(0.98);transition:opacity .5s ease, transform .5s ease;pointer-events:none}
+.slide.active{opacity:1;transform:scale(1);pointer-events:all}
+#progress-bar{position:fixed;bottom:0;left:0;height:4px;background:var(--blue);transition:width .4s ease;z-index:100}
+#nav{position:fixed;bottom:20px;right:20px;display:flex;gap:10px;z-index:100}
+.nav-btn{background:var(--card);border:1px solid var(--border);color:var(--text);width:45px;height:45px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.nav-btn:hover{border-color:var(--blue);box-shadow:0 0 15px rgba(0,194,255,0.3)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.display{font-family:var(--display);font-size:clamp(40px,5vw,72px);line-height:1;margin-bottom:15px}
+.title{font-family:var(--display);font-size:clamp(28px,3.5vw,40px);color:var(--blue);margin-bottom:15px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;height:100%;display:flex;flex-direction:column}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:1200px;height:70vh}
+.img-container{flex-grow:1;width:100%;position:relative;background:#0b1220;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-top:10px}
+.img-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;padding:10px}
+.chip{display:inline-block;padding:4px 10px;border-radius:4px;font-family:var(--mono);font-size:11px;background:rgba(0,194,255,0.1);border:1px solid var(--blue);margin-right:8px}
+.list-tech{font-size:14px;line-height:1.6;color:#a0b4cc;margin-top:10px;padding-left:20px}
+.list-tech li{margin-bottom:8px}
+strong{color:var(--text)}
+.highlight{color:var(--green);font-weight:bold;font-size:1.1em}
+</style>
+</head>
+<body>
+
+<div id="deck">
+    <div class="slide active">
+        <div class="label">Universidad EAFIT · Sistemas de Aprendizaje Automático</div>
+        <h1 class="display">PIPELINE DE MANTENIMIENTO<br><span style="color:var(--blue)">PREDICTIVO INTELIGENTE</span></h1>
+        <p style="color:var(--muted); max-width:700px; text-align:center; margin-top:10px; font-size:16px">
+            Auditoría de datos mediante Clustering, purificación del Ground Truth (0.60%) y mejora de métricas supervisadas en un 13% sobre el dataset AI4I 2020.
+        </p>
+        <div style="margin-top:30px">
+            <span class="chip">Desbalance Extremo (28.5:1)</span>
+            <span class="chip">Label Correction</span>
+            <span class="chip">Random Forest F1: 0.7040</span>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">01. El Problema Base: Desbalance y Ruido</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Contexto del Dataset (Experiencia 'E')</div>
+                <ul class="list-tech">
+                    <li><strong>Desbalance Extremo:</strong> Contamos con 10,000 registros, pero solo <strong>339 fallos (3.39%)</strong>.</li>
+                    <li><strong>Matriz de Correlación:</strong> El <em>Torque</em> (0.191) y el <em>Tool Wear</em> (0.105) son las variables con mayor influencia directa.</li>
+                    <li><strong>El Reto (GIGO):</strong> Si el etiquetado manual humano incluyó "falsas alarmas", entrenar directamente sobre esto generará modelos sesgados.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="label">Distribución de la Variable Objetivo</div>
+                <div class="img-container">
+                    <img src="../outputs/figures/fig_01_distribucion_target.png" alt="Distribución Target">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">02. Auditoría No Supervisada (Clustering)</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Evaluación de la Familia Cluster</div>
+                <ul class="list-tech">
+                    <li>Se corrieron pruebas ciegas (sin etiquetas) usando K-Means, Fuzzy C-Means, DBSCAN y Mean Shift.</li>
+                    <li><strong>El Ganador: K-Means (k=3)</strong> logró un Silhouette Score de <strong>0.3292</strong>, identificando consistentemente 3 estados termodinámicos de la planta.</li>
+                    <li><strong>DBSCAN:</strong> Destacó por identificar zonas de ruido puro y outliers multivariables.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="label">Proyección PCA: K-Means k=3</div>
+                <div class="img-container">
+                    <img src="../outputs/figures/fig_09_kmeans_pca.png" alt="PCA K-Means">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">03. Purificación de Etiquetas (Label Cleaning)</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Consenso: Clustering + Confident Learning</div>
+                <ul class="list-tech">
+                    <li>Cruzamos las asignaciones de K-Means con predicciones Out-of-Fold de un Random Forest base.</li>
+                    <li><strong>El Hallazgo:</strong> Descubrimos 60 registros (0.60%) etiquetados como "Falla" que físicamente operaban como máquinas normales (Prob < 0.20). Eran falsas alarmas.</li>
+                    <li><strong>Acción:</strong> Limpiamos el ruido reduciendo los fallos reales en el "Dataset B" de 339 a <strong>279</strong>.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="label">Dataset A (Original) vs Dataset B (Corregido)</div>
+                <div class="img-container">
+                    <img src="../outputs/figures/fig_14_etiquetas_comparacion.png" alt="Comparacion Etiquetas">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title">04. Benchmark de Modelos Supervisados</h2>
+        <div class="grid-2">
+            <div class="card">
+                <div class="label">Comparativa F1-Score: Dataset A vs B</div>
+                <ul class="list-tech" style="margin-bottom:10px;">
+                    <li>Entrenamos modelos con SMOTE para compensar el desbalance de clases.</li>
+                    <li><span class="highlight">La gráfica demuestra empíricamente el valor de la limpieza:</span> Todos los modelos sin excepción mejoraron su rendimiento al usar el Dataset B.</li>
+                </ul>
+                <div class="img-container">
+                    <img src="../outputs/figures/fig_20_f1_comparacion.png" alt="Comparacion F1">
+                </div>
+            </div>
+            <div class="card">
+                <div class="label">Heatmap de Métricas Generales</div>
+                <div class="img-container">
+                    <img src="../outputs/figures/fig_22_heatmap_metricas.png" alt="Heatmap Metricas">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="title" style="text-align:center; width:100%">05. Conclusiones y Recomendaciones</h2>
+        <div class="card" style="width:100%; max-width:900px; margin:0 auto; height:auto; padding:30px">
+            <div class="label">Resumen del Experimento</div>
+            <ul class="list-tech" style="font-size:16px; margin-top:20px">
+                <li style="margin-bottom:15px"><strong style="color:var(--blue)">Impacto del Ruido:</strong> Corregir apenas el <strong>0.60%</strong> de las etiquetas (60 falsas alarmas) tuvo un impacto desproporcionado en la frontera de decisión.</li>
+                <li style="margin-bottom:15px"><strong style="color:var(--blue)">El Modelo Ganador:</strong> <strong>Random Forest</strong> entrenado sobre el Dataset B es el modelo recomendado para producción.</li>
+                <li style="margin-bottom:15px"><strong style="color:var(--green)">El Salto Cuantitativo:</strong> Al limpiar la data, el Random Forest disparó su <strong>F1-Score de 0.5696 a 0.7040</strong> (una mejora absoluta del 13.4%) y su AUC alcanzó <strong>0.9913</strong>.</li>
+                <li><strong style="color:var(--orange)">Reflexión Final:</strong> El aprendizaje no supervisado es un paso auditable obligatorio antes del entrenamiento supervisado industrial.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="progress-bar"></div>
+<div id="nav">
+    <button class="nav-btn" onclick="prevSlide()">←</button>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progress-bar');
+
+function updateSlide() {
+    slides.forEach((s, i) => {
+        s.classList.toggle('active', i === currentSlide);
+    });
+    progressBar.style.width = ((currentSlide + 1) / slides.length * 100) + '%';
+}
+
+function nextSlide() {
+    if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+    }
+}
+
+function prevSlide() {
+    if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === "ArrowRight" || e.key === " ") nextSlide();
+    if (e.key === "ArrowLeft") prevSlide();
+});
+
+updateSlide();
+</script>
+</body>
+</html>

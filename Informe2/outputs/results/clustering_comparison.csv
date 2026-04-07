@@ -1,0 +1,5 @@
+Método,N_Clusters,Silhouette_Score,Adjusted_Rand_Index_vs_target
+K-Means,3,0.3292,-0.0083
+Fuzzy C-Means,2,0.2774,-0.0047
+DBSCAN,4,0.7632,-0.0071
+Mean Shift,3,0.3292,-0.0083

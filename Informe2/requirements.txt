@@ -1,0 +1,14 @@
+kaggle
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+scikit-learn
+scikit-fuzzy
+imbalanced-learn
+scipy
+torch
+torchvision
+ipykernel
+notebook
